@@ -8,12 +8,13 @@ import GallerySection from './components/GallerySection.vue';
 import RSVPForm from './components/RSVPForm.vue';
 import LocationSection from './components/LocationSection.vue';
 import DonationSection from './components/DonationSection.vue';
+import musicFile from './assets/music/bs.mp3';
 
 const activeTheme = themes[config.theme] ?? themes['pink-gold'];
 const musicRef = ref(null);
 const isMusicPlaying = ref(false);
 const isInvitationOpen = ref(false);
-const musicSource = './assets/music/bs.mp3';
+const musicSource = musicFile;
 const openingBackground = '/assets/images/20260321_12_ninetysix_kdr.jpg';
 let scrollObserver = null;
 
@@ -27,9 +28,21 @@ const inviteeName = computed(() => {
   return params.get('nama') || params.get('to') || params.get('guest') || (config.inviteeName ?? 'Bapak/Ibu/Saudara/i');
 });
 
-const openInvitation = () => {
+const openInvitation = async () => {
   isInvitationOpen.value = true;
   document.body.style.overflow = '';
+
+  if (!musicRef.value || isMusicPlaying.value) {
+    return;
+  }
+
+  try {
+    musicRef.value.volume = 0.35;
+    await musicRef.value.play();
+    isMusicPlaying.value = true;
+  } catch {
+    isMusicPlaying.value = false;
+  }
 };
 
 const toggleMusic = async () => {
