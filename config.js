@@ -1,7 +1,13 @@
+import galeryImage1 from './src/assets/images/20260321_12_ninetysix_kdr.jpg';
+import galeryImage2 from './src/assets/images/20260117_26_ninetysix_kdr.jpg';
+import galeryImage3 from './src/assets/images/20260321_8_ninetysix_kdr.jpg';
+import galeryImage4 from './src/assets/images/20260321_5_ninetysix_kdr.jpg';
+import galeryImage5 from './src/assets/images/20260117_1_ninetysix_kdr.jpg';
+import galeryImage6 from './src/assets/images/20260321_3_ninetysix_kdr.jpg';
+
 export default {
-  theme: "pink-gold",
-  inviteeName: "Siti Setiawati",
-//   inviteeName: "Bapak/Ibu/Saudara/i",
+//   inviteeName: "Siti Setiawati",
+  inviteeName: "Bapak/Ibu/Saudara/i",
   couple: {
     groomName: "Abdul Rahman Jaelani",
     brideName: "Siti Setiawati",
@@ -21,12 +27,12 @@ export default {
     closingMessage: "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk menyempurnakan sukacita di hari istimewa kami."
   },
   gallery: [
-    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1523438097201-512ae7d59c5b?auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80"
+    galeryImage1,
+    galeryImage2,
+    galeryImage3,
+    galeryImage4,
+    galeryImage5,
+    galeryImage6
   ],
   rsvp: {
     googleScriptUrl: "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec",

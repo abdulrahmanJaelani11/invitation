@@ -16,16 +16,19 @@ const isMusicPlaying = ref(false);
 const isInvitationOpen = ref(false);
 const musicSource = musicFile;
 const openingBackground = '/assets/images/20260321_12_ninetysix_kdr.jpg';
+const defaultInviteeName = config.inviteeName ?? 'Bapak/Ibu/Saudara/i';
 let scrollObserver = null;
 
 const musicLabel = computed(() => (isMusicPlaying.value ? 'Matikan Musik' : 'Nyalakan Musik'));
 const inviteeName = computed(() => {
   if (typeof window === 'undefined') {
-    return config.inviteeName ?? 'Bapak/Ibu/Saudara/i';
+    return defaultInviteeName;
   }
 
   const params = new URLSearchParams(window.location.search);
-  return params.get('nama') || params.get('to') || params.get('guest') || (config.inviteeName ?? 'Bapak/Ibu/Saudara/i');
+  const urlInviteeName = params.get('nama');
+
+  return urlInviteeName?.trim() || defaultInviteeName;
 });
 
 const openInvitation = async () => {
