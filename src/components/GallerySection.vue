@@ -57,11 +57,26 @@ const nextSlide = () => {
   scrollToIndex(Math.min(items.length - 1, activeSlide.value + 1));
 };
 
+const canPrev = () => activeSlide.value > 0;
+const canNext = () => {
+  const items = Array.from(scrollContainer.value?.querySelectorAll('.gallery-card') || []);
+  return activeSlide.value < items.length - 1;
+};
+
+const onKeydown = (e) => {
+  const tag = document.activeElement?.tagName?.toLowerCase();
+  const isInput = tag === 'input' || tag === 'textarea' || document.activeElement?.isContentEditable;
+  if (isInput) return;
+  if (e.key === 'ArrowLeft') prevSlide();
+  if (e.key === 'ArrowRight') nextSlide();
+};
+
 onMounted(() => {
   if (scrollContainer.value) {
     scrollContainer.value.addEventListener('scroll', updateActiveSlide, { passive: true });
     setTimeout(updateActiveSlide, 50);
   }
+  window.addEventListener('keydown', onKeydown);
 });
 
 onBeforeUnmount(() => {
@@ -69,6 +84,7 @@ onBeforeUnmount(() => {
   if (scrollContainer.value) {
     scrollContainer.value.removeEventListener('scroll', updateActiveSlide);
   }
+  window.removeEventListener('keydown', onKeydown);
 });
 </script>
 
@@ -99,11 +115,33 @@ onBeforeUnmount(() => {
 
       <!-- Mobile controls -->
       <div class="mt-4 flex items-center justify-between gap-3 lg:hidden">
-        <button type="button" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm" @click="prevSlide">Prev</button>
+        <button
+          type="button"
+          class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white p-2 text-sm shadow-sm"
+          @click="prevSlide"
+          :aria-disabled="!canPrev()"
+          :disabled="!canPrev()"
+          aria-label="Sebelumnya"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M12.707 15.707a1 1 0 01-1.414 0L6.586 11a1 1 0 010-1.414l4.707-4.707a1 1 0 011.414 1.414L9.414 10l3.293 3.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+          </svg>
+        </button>
         <div class="flex items-center gap-2">
-          <button v-for="(_, i) in config.gallery.length" :key="i" type="button" class="h-2 w-8 rounded-full transition" :class="activeSlide === i ? 'bg-[var(--color-primary)]' : 'bg-white/60'" @click="scrollToIndex(i)" aria-label="Pindah slide"></button>
+          <button v-for="(_, i) in config.gallery.length" :key="i" type="button" class="h-2 w-8 rounded-full transition" :class="activeSlide === i ? 'bg-[var(--color-primary)]' : 'bg-white/60'" @click="scrollToIndex(i)" :aria-current="activeSlide === i" :aria-label="`Slide ${i+1}`"></button>
         </div>
-        <button type="button" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm" @click="nextSlide">Next</button>
+        <button
+          type="button"
+          class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white p-2 text-sm shadow-sm"
+          @click="nextSlide"
+          :aria-disabled="!canNext()"
+          :disabled="!canNext()"
+          aria-label="Selanjutnya"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M7.293 4.293a1 1 0 011.414 0L13.414 9a1 1 0 010 1.414L8.707 14.707a1 1 0 11-1.414-1.414L10.586 10 7.293 6.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </button>
       </div>
     </div>
 
