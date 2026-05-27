@@ -1,5 +1,7 @@
 export default {
   theme: "pink-gold",
+  inviteeName: "Siti Setiawati",
+//   inviteeName: "Bapak/Ibu/Saudara/i",
   couple: {
     groomName: "Abdul Rahman Jaelani",
     brideName: "Siti Setiawati",
