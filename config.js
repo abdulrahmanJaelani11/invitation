@@ -63,13 +63,13 @@ export default {
         accountName: "Raka Aditya Pratama",
         qrisImageUrl: null
       },
-      {
-        type: "qris",
-        provider: "QRIS",
-        accountNumber: "-",
-        accountName: "Raka Aditya Pratama",
-        qrisImageUrl: "https://images.unsplash.com/photo-1556742205-9c8c801f34b7?auto=format&fit=crop&w=1200&q=80"
-      }
+    //   {
+    //     type: "qris",
+    //     provider: "QRIS",
+    //     accountNumber: "-",
+    //     accountName: "Raka Aditya Pratama",
+    //     qrisImageUrl: "https://images.unsplash.com/photo-1556742205-9c8c801f34b7?auto=format&fit=crop&w=1200&q=80"
+    //   }
     ]
   }
 }

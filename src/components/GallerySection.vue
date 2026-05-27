@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeUnmount, ref } from 'vue';
+import { computed, onBeforeUnmount, ref, onMounted } from 'vue';
 import config from '../../config.js';
 import themes from '../../themes.js';
 
@@ -18,8 +18,57 @@ const closeOverlay = () => {
   document.body.style.overflow = '';
 };
 
+// Slider state for mobile
+const scrollContainer = ref(null);
+const activeSlide = ref(0);
+
+const updateActiveSlide = () => {
+  const el = scrollContainer.value;
+  if (!el) return;
+  const items = Array.from(el.querySelectorAll('.gallery-card'));
+  if (!items.length) return;
+  const center = el.scrollLeft + el.clientWidth / 2;
+  let nearest = 0;
+  let nearestDistance = Infinity;
+  items.forEach((child, idx) => {
+    const rectLeft = child.offsetLeft;
+    const rectCenter = rectLeft + child.clientWidth / 2;
+    const dist = Math.abs(center - rectCenter);
+    if (dist < nearestDistance) {
+      nearestDistance = dist;
+      nearest = idx;
+    }
+  });
+  activeSlide.value = nearest;
+};
+
+const scrollToIndex = (i) => {
+  const el = scrollContainer.value;
+  if (!el) return;
+  const items = Array.from(el.querySelectorAll('.gallery-card'));
+  const item = items[i];
+  if (!item) return;
+  el.scrollTo({ left: item.offsetLeft, behavior: 'smooth' });
+};
+
+const prevSlide = () => scrollToIndex(Math.max(0, activeSlide.value - 1));
+const nextSlide = () => {
+  const items = Array.from(scrollContainer.value?.querySelectorAll('.gallery-card') || []);
+  scrollToIndex(Math.min(items.length - 1, activeSlide.value + 1));
+};
+
+onMounted(() => {
+  if (scrollContainer.value) {
+    scrollContainer.value.addEventListener('scroll', updateActiveSlide, { passive: true });
+    setTimeout(updateActiveSlide, 50);
+  }
+});
+
 onBeforeUnmount(() => {
-  document.body.style.overflow = '';
+  document.body.style.overflow = ''; // ensure scroll restored
+  if (scrollContainer.value) {
+    scrollContainer.value.removeEventListener('scroll', updateActiveSlide);
+  }
 });
 </script>
 
@@ -33,18 +82,29 @@ onBeforeUnmount(() => {
       <p class="max-w-xl text-sm leading-7 text-slate-600">Kumpulan potret sederhana yang menangkap rasa syukur, kebahagiaan, dan harapan di hari istimewa kami.</p>
     </div>
 
-    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <button
-        v-for="(image, index) in config.gallery"
-        :key="`${image}-${index}`"
-        type="button"
-        class="group overflow-hidden rounded-3xl border border-slate-100 bg-slate-50 text-left shadow-sm"
-        data-aos="zoom-in"
-        :style="{ '--aos-delay': `${index * 90}ms` }"
-        @click="openOverlay(image)"
-      >
-        <img :src="image" :alt="`Galeri pernikahan ${index + 1}`" class="h-72 w-full object-cover transition duration-500 group-hover:scale-105" />
-      </button>
+    <div class="mt-6">
+      <div ref="scrollContainer" class="flex gap-4 overflow-x-auto snap-x snap-mandatory lg:grid lg:grid-cols-3 lg:gap-4" role="list">
+        <button
+          v-for="(image, index) in config.gallery"
+          :key="`${image}-${index}`"
+          type="button"
+          class="gallery-card group min-w-[85%] sm:min-w-[60%] lg:min-w-0 snap-start flex-shrink-0 overflow-hidden rounded-3xl border border-slate-100 bg-slate-50 text-left shadow-sm"
+          data-aos="zoom-in"
+          :style="{ '--aos-delay': `${index * 90}ms` }"
+          @click="openOverlay(image)"
+        >
+          <img :src="image" :alt="`Galeri pernikahan ${index + 1}`" class="h-72 w-full object-cover transition duration-500 group-hover:scale-105" />
+        </button>
+      </div>
+
+      <!-- Mobile controls -->
+      <div class="mt-4 flex items-center justify-between gap-3 lg:hidden">
+        <button type="button" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm" @click="prevSlide">Prev</button>
+        <div class="flex items-center gap-2">
+          <button v-for="(_, i) in config.gallery.length" :key="i" type="button" class="h-2 w-8 rounded-full transition" :class="activeSlide === i ? 'bg-[var(--color-primary)]' : 'bg-white/60'" @click="scrollToIndex(i)" aria-label="Pindah slide"></button>
+        </div>
+        <button type="button" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm" @click="nextSlide">Next</button>
+      </div>
     </div>
 
     <div class="mt-6 h-1 rounded-full bg-[linear-gradient(90deg,var(--color-primary),var(--color-accent))]" :style="{ '--_theme-color': activeTheme.accent }"></div>
@@ -74,7 +134,7 @@ onBeforeUnmount(() => {
               <p class="text-sm font-semibold uppercase tracking-[0.5em] text-white/70">Galeri Pernikahan</p>
               <h3 class="mt-3 text-2xl font-semibold sm:text-3xl">Momen Indah Kami</h3>
               <p class="mx-auto mt-3 max-w-2xl text-sm leading-7 text-white/80 sm:text-base">
-                Foto yang Anda pilih ditampilkan dalam popup bergaya undangan agar tetap serasi dengan nuansa acara.
+                Kumpulan potret sederhana yang menangkap rasa syukur, kebahagiaan, dan harapan di hari istimewa kami.
               </p>
             </div>
 

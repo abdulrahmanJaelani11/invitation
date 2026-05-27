@@ -33,7 +33,7 @@ const formatDate = (value) => {
       <div class="flex flex-col justify-center gap-6 p-6 sm:p-8 lg:p-10">
         <div data-aos="fade-up" style="--aos-delay: 140ms;">
           <p class="text-sm font-semibold uppercase tracking-[0.35em] text-[var(--color-primary)]">Undangan Pernikahan</p>
-          <h1 class="mt-3 text-4xl font-semibold leading-tight text-slate-900 sm:text-5xl">
+          <h1 class="mt-3 text-4xl font-semibold leading-tight text-slate-900 sm:text-4xl">
             {{ config.couple.groomName }}
             <span class="block text-2xl text-slate-500">&</span>
             {{ config.couple.brideName }}
